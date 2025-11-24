@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.GroupChatRoom;
+import com.example.demo.service.ChatParticipantService;
 import com.example.demo.service.GroupChatRoomService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class GroupChatRoomController {
 
     private final GroupChatRoomService service;
+    private final ChatParticipantService participantService;
     
     @PostMapping("/create")
     public Long createRoom(
@@ -27,8 +29,18 @@ public class GroupChatRoomController {
     ) {
         return service.createRoom(title, description, maxUserCnt);
     }
+    
     @GetMapping("/{gcrId}")
     public GroupChatRoom getRoom(@PathVariable("gcrId") Long gcrId) {
         return service.getRoom(gcrId);
     }
+    
+    @PostMapping("/join")
+    public String joinGroupRoom(
+            @RequestParam("gcrId") Long gcrId,
+            @RequestParam("userId") Long userId
+    ) {
+        return participantService.joinGroupRoom(gcrId, userId);
+    }
+
 }
