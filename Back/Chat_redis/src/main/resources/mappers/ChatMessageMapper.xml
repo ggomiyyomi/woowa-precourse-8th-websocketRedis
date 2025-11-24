@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.ChatMessageMapper">
+
+    <!-- 메시지 저장 -->
+    <insert id="insertMessage"
+            parameterType="com.example.demo.domain.ChatMessage"
+            useGeneratedKeys="true"
+            keyProperty="cmId">
+
+        INSERT INTO CHAT_MESSAGE
+        (room_type, room_id, user_id, message_type, content, image_url, is_deleted, created_at)
+        VALUES
+        (#{roomType}, #{roomId}, #{userId}, #{messageType},
+         #{content}, #{imageUrl}, false, NOW());
+
+    </insert>
+
+    <!-- 메시지 조회 (그룹/1대1 공통) -->
+    <select id="getMessagesByRoom"
+            resultType="com.example.demo.domain.ChatMessage">
+
+        SELECT *
+        FROM CHAT_MESSAGE
+        WHERE room_type = #{roomType}
+          AND room_id = #{roomId}
+        ORDER BY created_at ASC
+
+    </select>
+
+</mapper>
