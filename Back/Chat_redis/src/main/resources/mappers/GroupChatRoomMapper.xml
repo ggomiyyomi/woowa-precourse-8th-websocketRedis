@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.GroupChatRoomMapper">
+
+    <!-- Insert -->
+    <insert id="createGroupRoom" parameterType="com.example.demo.domain.GroupChatRoom"
+            useGeneratedKeys="true" keyProperty="gcrId">
+        INSERT INTO GROUP_CHAT_ROOM
+        (room_title, room_description, max_user_cnt, is_deleted, created_at)
+        VALUES
+        (#{roomTitle}, #{roomDescription}, #{maxUserCnt}, false, NOW())
+    </insert>
+
+    <!-- Select -->
+    <select id="findById" resultType="com.example.demo.domain.GroupChatRoom">
+        SELECT *
+        FROM GROUP_CHAT_ROOM
+        WHERE gcr_id = #{gcrId}
+    </select>
+
+</mapper>
