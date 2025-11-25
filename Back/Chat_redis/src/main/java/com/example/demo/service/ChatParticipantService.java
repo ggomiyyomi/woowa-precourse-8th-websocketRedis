@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.demo.domain.ChatParticipant;
 import com.example.demo.domain.GroupChatRoom;
 import com.example.demo.mapper.ChatParticipantMapper;
 import com.example.demo.mapper.GroupChatRoomMapper;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +50,9 @@ public class ChatParticipantService {
         participantMapper.insertParticipant(participant);
 
         return "참여 완료";
+    }
+    
+    public List<ChatParticipant> getParticipants(Long gcrId) {
+        return participantMapper.getParticipants(gcrId);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.GroupChatRoom;
@@ -26,4 +28,9 @@ public class GroupChatRoomService {
     public GroupChatRoom getRoom(Long gcrId) {
         return mapper.findById(gcrId);
     }
+    
+    public List<GroupChatRoom> getRoomList() {
+        return mapper.findAll();
+    }
+
 }

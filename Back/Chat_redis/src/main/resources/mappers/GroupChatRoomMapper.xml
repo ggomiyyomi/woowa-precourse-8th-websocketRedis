@@ -20,5 +20,13 @@
         FROM GROUP_CHAT_ROOM
         WHERE gcr_id = #{gcrId}
     </select>
+    
+    <!-- findAll -->
+    <select id="findAll" resultType="com.example.demo.domain.GroupChatRoom">
+	    SELECT *
+	    FROM GROUP_CHAT_ROOM
+	    WHERE is_deleted = FALSE
+	    ORDER BY gcr_id DESC
+	</select>
 
 </mapper>

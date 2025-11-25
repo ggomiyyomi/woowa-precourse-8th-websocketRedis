@@ -1,5 +1,7 @@
 package com.example.demo.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.domain.GroupChatRoom;
@@ -12,4 +14,7 @@ public interface GroupChatRoomMapper {
 
     // 방 상세 조회 (확인용)
     GroupChatRoom findById(Long gcrId);
+    
+    // 방 목록 조회 
+    List<GroupChatRoom> findAll();
 }

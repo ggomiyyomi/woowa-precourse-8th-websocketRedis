@@ -1,0 +1,64 @@
+CREATE TABLE USER (
+    user_id BIGINT NOT NULL AUTO_INCREMENT,
+    user_name VARCHAR(50) NOT NULL,
+    user_nickname VARCHAR(50),
+    user_profile_url VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id)
+);
+
+CREATE TABLE PRIVATE_CHAT_ROOM (
+    pcr_id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id1 BIGINT NOT NULL,
+    user_id2 BIGINT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (pcr_id)
+);
+
+CREATE TABLE GROUP_CHAT_ROOM (
+    gcr_id BIGINT NOT NULL AUTO_INCREMENT,
+    room_title VARCHAR(255) NOT NULL,
+    room_description VARCHAR(1000),
+    max_user_cnt INT DEFAULT 100,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (gcr_id)
+);
+
+CREATE TABLE CHAT_PARTICIPANT (
+    participant_id BIGINT NOT NULL AUTO_INCREMENT,
+    room_type VARCHAR(10) NOT NULL,  -- 'GROUP' or 'PRIVATE'
+    room_id BIGINT NOT NULL,        -- gcr_id 또는 pcr_id
+    user_id BIGINT NOT NULL,
+    last_read_message_id BIGINT DEFAULT 0,
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (participant_id)
+);
+
+CREATE TABLE CHAT_MESSAGE (
+    cm_id BIGINT NOT NULL AUTO_INCREMENT,
+    room_type VARCHAR(10) NOT NULL,  -- 'GROUP' or 'PRIVATE'
+    room_id BIGINT NOT NULL,         -- gcr_id 또는 pcr_id
+    user_id BIGINT NOT NULL,
+    message_type VARCHAR(20) DEFAULT 'TEXT', -- TEXT, IMAGE, SYSTEM 등
+    content VARCHAR(1000),
+    image_url VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (cm_id)
+);
+
+ALTER TABLE PRIVATE_CHAT_ROOM
+    ADD CONSTRAINT FK_PRIVATE_USER1
+    FOREIGN KEY (user_id1) REFERENCES USER(user_id);
+
+ALTER TABLE PRIVATE_CHAT_ROOM
+    ADD CONSTRAINT FK_PRIVATE_USER2
+    FOREIGN KEY (user_id2) REFERENCES USER(user_id);
+
+ALTER TABLE CHAT_MESSAGE
+    ADD CONSTRAINT FK_MESSAGE_USER
+    FOREIGN KEY (user_id) REFERENCES USER(user_id);
+    
+INSERT INTO USER (user_name, user_nickname, user_profile_url) VALUES ('Heejeong', 'hidong', '/img/1.png'), ('Minji', 'min', '/img/2.png'), ('Jisun', 'js', '/img/3.png'), ('Eunchong', 'ec', '/img/4.png'), ('Taehyun', 'tae', '/img/5.png'), ('Ari', 'ari', '/img/6.png'), ('Subin', 'sub', '/img/7.png'), ('Kangmin', 'kang', '/img/8.png'), ('Dahyun', 'dah', '/img/9.png'), ('Sunwoo', 'sun', '/img/10.png');
