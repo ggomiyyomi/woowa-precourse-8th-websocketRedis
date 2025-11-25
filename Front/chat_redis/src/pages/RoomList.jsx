@@ -21,6 +21,10 @@ function RoomList() {
   const [editDesc, setEditDesc] = useState("");
   const [editMax, setEditMax] = useState(10);
 
+  // ⭐ 메시지 state
+    const [chatMessages, setChatMessages] = useState([]);
+    const [chatInput, setChatInput] = useState("");
+
   // 방 목록 불러오기
   const fetchRooms = () => {
     fetch("http://localhost:8090/chat/group/list")
@@ -63,6 +67,7 @@ function RoomList() {
     fetchParticipants(roomId);
     setMessage(""); 
     setIsEditing(false); // 다른 방 누르면 수정모드 꺼지게
+    fetchMessages(roomId);
   };
 
   // 참여하기
@@ -180,6 +185,42 @@ function RoomList() {
     })
     .catch((err) => console.error(err));
 };
+
+    //메시지 목록 불러오기
+    const fetchMessages = (roomId) => {
+    fetch(
+        `http://localhost:8090/chat/message/list?roomType=GROUP&roomId=${roomId}&afterId=0&limit=200`
+    )
+        .then((res) => res.json())
+        .then((data) => setChatMessages(data))
+        .catch((err) => console.error(err));
+    };
+    //메시지 보내기
+    const handleSendMessage = () => {
+    if (chatInput.trim() === "") return;
+
+    const payload = {
+        roomType: "GROUP",
+        roomId: selectedRoom,
+        userId: userId,
+        messageType: "TEXT",
+        content: chatInput,
+    };
+
+    fetch("http://localhost:8090/chat/message/send", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    })
+        .then((res) => res.json())
+        .then(() => {
+        setChatInput("");
+        fetchMessages(selectedRoom); // 메시지 다시 불러오기
+        })
+        .catch((err) => console.error(err));
+    };
 
 
   return (
@@ -440,6 +481,79 @@ function RoomList() {
           )}
         </div>
       )}
+
+      {/* ⭐⭐⭐ 채팅 UI ⭐⭐⭐ */}
+<h3 style={{ marginTop: 30 }}>💬 채팅</h3>
+
+<div
+  style={{
+    border: "1px solid #ccc",
+    borderRadius: 8,
+    padding: 10,
+    height: 300,
+    overflowY: "scroll",
+    background: "#fafafa",
+    marginBottom: 15
+  }}
+>
+  {chatMessages.length === 0 ? (
+    <p style={{ color: "#666" }}>아직 메시지가 없습니다.</p>
+  ) : (
+    chatMessages.map((msg) => (
+      <div
+        key={msg.cmId}
+        style={{
+          display: "flex",
+          justifyContent: msg.userId === userId ? "flex-end" : "flex-start",
+          marginBottom: 10
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "70%",
+            padding: "8px 12px",
+            borderRadius: 12,
+            background: msg.userId === userId ? "#cfe2ff" : "#e9ecef",
+            textAlign: "left"
+          }}
+        >
+          <p style={{ margin: 0, fontWeight: "bold", fontSize: 12 }}>
+            사용자 {msg.userId}
+          </p>
+          <p style={{ margin: "5px 0" }}>{msg.content}</p>
+          <p style={{ fontSize: 10, color: "#777", textAlign: "right" }}>
+            {msg.createdAt}
+          </p>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
+{/* 입력창 */}
+<div style={{ display: "flex", gap: 10 }}>
+  <input
+    type="text"
+    value={chatInput}
+    onChange={(e) => setChatInput(e.target.value)}
+    placeholder="메시지를 입력하세요..."
+    style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+  />
+
+  <button
+    onClick={handleSendMessage}
+    style={{
+      background: "#007bff",
+      color: "white",
+      padding: "10px 15px",
+      border: "none",
+      borderRadius: 8,
+      cursor: "pointer"
+    }}
+  >
+    전송
+  </button>
+</div>
     </div>
   );
 }
