@@ -37,4 +37,8 @@ public class ChatMessageService {
 
         return chatMessageMapper.findMessages(roomType, roomId, afterId, limit);
     }
+    
+    public ChatMessage getById(Long cmId) {
+        return chatMessageMapper.findById(cmId);
+    }
 }

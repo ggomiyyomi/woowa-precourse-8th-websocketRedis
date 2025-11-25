@@ -16,4 +16,6 @@ public interface ChatMessageMapper {
             @Param("afterId") Long afterId,   // 0이면 전체
             @Param("limit") int limit
     );
+    
+    ChatMessage findById(@Param("cmId") Long cmId); 
 }

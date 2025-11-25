@@ -27,5 +27,12 @@
     ORDER BY cm_id ASC
     LIMIT #{limit}
   </select>
+  
+  <!-- 메시지 단건 조회 -->
+  <select id="findById" resultType="com.example.demo.domain.ChatMessage">
+	  SELECT *
+	  FROM CHAT_MESSAGE
+	  WHERE cm_id = #{cmId}
+	</select>
 
 </mapper>
