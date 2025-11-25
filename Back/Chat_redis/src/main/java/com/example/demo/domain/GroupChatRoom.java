@@ -12,4 +12,5 @@ public class GroupChatRoom {
     private Integer maxUserCnt;
     private Boolean isDeleted;
     private LocalDateTime createdAt;
+    private Long ownerUserId;
 }

@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.ChatParticipant;
 import com.example.demo.domain.GroupChatRoom;
+import com.example.demo.dto.UpdateRoomRequest;
 import com.example.demo.service.ChatParticipantService;
 import com.example.demo.service.GroupChatRoomService;
 
@@ -26,11 +28,12 @@ public class GroupChatRoomController {
     
     @PostMapping("/create")
     public Long createRoom(
-            @RequestParam(name = "title") String title,
-            @RequestParam(name = "description", required = false) String description,
-            @RequestParam(name = "maxUserCnt", defaultValue = "50") Integer maxUserCnt
+            @RequestParam("title") String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "maxUserCnt", defaultValue = "50") Integer maxUserCnt,
+            @RequestParam("userId") Long userId   // 이게 방장
     ) {
-        return service.createRoom(title, description, maxUserCnt);
+        return service.createRoom(title, description, maxUserCnt, userId);
     }
     
     @GetMapping("/{gcrId}")
@@ -54,6 +57,33 @@ public class GroupChatRoomController {
     @GetMapping("/{gcrId}/participants")
     public List<ChatParticipant> getParticipants(@PathVariable("gcrId") Long gcrId) {
         return participantService.getParticipants(gcrId);
+    }
+    
+    @PostMapping("/leave")
+    public String leaveGroupRoom(
+            @RequestParam("gcrId") Long gcrId,
+            @RequestParam("userId") Long userId
+    ) {
+        return participantService.leaveGroupRoom(gcrId, userId);
+    }
+    
+    @PostMapping("/update")
+    public String updateRoom(@RequestBody UpdateRoomRequest req) {
+        return service.updateRoom(
+                req.getGcrId(),
+                req.getUserId(),
+                req.getTitle(),
+                req.getDescription(),
+                req.getMaxUserCnt()
+        );
+    }
+    
+    @PostMapping("/delete")
+    public String deleteRoom(
+            @RequestParam("gcrId") Long gcrId,
+            @RequestParam("userId") Long userId
+    ) {
+        return service.deleteRoom(gcrId, userId);
     }
 
 }

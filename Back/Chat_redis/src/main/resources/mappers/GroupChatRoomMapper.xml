@@ -6,13 +6,14 @@
 <mapper namespace="com.example.demo.mapper.GroupChatRoomMapper">
 
     <!-- Insert -->
-    <insert id="createGroupRoom" parameterType="com.example.demo.domain.GroupChatRoom"
-            useGeneratedKeys="true" keyProperty="gcrId">
-        INSERT INTO GROUP_CHAT_ROOM
-        (room_title, room_description, max_user_cnt, is_deleted, created_at)
-        VALUES
-        (#{roomTitle}, #{roomDescription}, #{maxUserCnt}, false, NOW())
-    </insert>
+	<insert id="createGroupRoom" parameterType="com.example.demo.domain.GroupChatRoom"
+	        useGeneratedKeys="true" keyProperty="gcrId">
+	    INSERT INTO GROUP_CHAT_ROOM
+	    (room_title, room_description, max_user_cnt, owner_user_id, is_deleted, created_at)
+	    VALUES
+	    (#{roomTitle}, #{roomDescription}, #{maxUserCnt}, #{ownerUserId}, false, NOW())
+	</insert>
+
 
     <!-- Select -->
     <select id="findById" resultType="com.example.demo.domain.GroupChatRoom">
@@ -29,4 +30,20 @@
 	    ORDER BY gcr_id DESC
 	</select>
 
+	<!-- update -->
+	<update id="updateRoom" parameterType="com.example.demo.domain.GroupChatRoom">
+	    UPDATE GROUP_CHAT_ROOM
+	    SET 
+	        room_title = #{roomTitle},
+	        room_description = #{roomDescription},
+	        max_user_cnt = #{maxUserCnt}
+	    WHERE gcr_id = #{gcrId}
+	</update>
+	
+	<!-- delete -->
+	<update id="deleteRoom">
+	    UPDATE GROUP_CHAT_ROOM
+	    SET is_deleted = true
+	    WHERE gcr_id = #{gcrId}
+	</update>
 </mapper>

@@ -18,4 +18,7 @@ public interface ChatParticipantMapper {
                          @Param("userId") Long userId);
 
     List<ChatParticipant> getParticipants(@Param("gcrId") Long gcrId);
+    
+    // 방 나가기
+    int leaveRoom(@Param("gcrId") Long gcrId, @Param("userId") Long userId);
 }

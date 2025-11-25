@@ -55,4 +55,21 @@ public class ChatParticipantService {
     public List<ChatParticipant> getParticipants(Long gcrId) {
         return participantMapper.getParticipants(gcrId);
     }
+    
+    public String leaveGroupRoom(Long gcrId, Long userId) {
+
+        int exists = participantMapper.existsUserInRoom(gcrId, userId);
+        if (exists == 0) {
+            return "참여 중이 아닙니다.";
+        }
+
+        int result = participantMapper.leaveRoom(gcrId, userId);
+
+        if (result > 0) {
+            return "나가기 완료";
+        } else {
+            return "나가기 실패";
+        }
+    }
+
 }

@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.mapper.ChatParticipantMapper">
-	<!-- test -->
     <!-- 참여자 추가 -->
     <insert id="insertParticipant" parameterType="com.example.demo.domain.ChatParticipant"
             useGeneratedKeys="true" keyProperty="participantId">
@@ -38,5 +37,14 @@
         WHERE room_type = 'GROUP'
           AND room_id = #{gcrId}
     </select>
+    
+   <!-- 방 나가기 -->
+    <delete id="leaveRoom">
+	    DELETE FROM CHAT_PARTICIPANT
+	    WHERE room_type = 'GROUP'
+	      AND room_id = #{gcrId}
+	      AND user_id = #{userId}
+	</delete>
+    
 
 </mapper>
