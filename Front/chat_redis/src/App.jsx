@@ -1,9 +1,9 @@
-import RoomList from "./pages/RoomList";
+import GroupChatPage from "./pages/GroupChatPage";
 
 function App() {
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <RoomList />
+      <GroupChatPage />
     </div>
   );
 }
