@@ -14,14 +14,20 @@ import lombok.RequiredArgsConstructor;
 public class RedisPublisher {
 
     private final StringRedisTemplate redisTemplate;
+    private final RedisSubscriber redisSubscriber;
 
     public String publish(String streamKey, Map<String, String> messageData) {
 
+        // 메시지 저장
         RecordId id = redisTemplate.opsForStream()
-                .add(StreamRecords.newRecord()
-                        .in(streamKey)
-                        .ofMap(messageData));
+            .add(StreamRecords.newRecord()
+            .in(streamKey)
+            .ofMap(messageData));
 
-        return id.getValue();  // 메시지 ID 반환
+        // 🔥 stream listener 등록
+        redisSubscriber.subscribeStream(streamKey);
+
+        return id.getValue();
     }
+
 }

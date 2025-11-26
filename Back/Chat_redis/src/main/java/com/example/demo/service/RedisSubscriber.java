@@ -67,4 +67,22 @@ public class RedisSubscriber {
         container.start();
         log.info("🚀 Redis Stream Listener Started");
     }
+    
+    public void subscribeStream(String streamKey) {
+        try {
+            redisTemplate.opsForStream().createGroup(streamKey, GROUP);
+        } catch (Exception e) {}
+
+        container.receive(
+            Consumer.from(GROUP, "c1"),
+            StreamOffset.create(streamKey, ReadOffset.lastConsumed()),
+            message -> {
+                MapRecord<String, String, String> record = (MapRecord) message;
+                String[] parts = record.getStream().split(":");
+                String roomId = parts[2];
+                messagingTemplate.convertAndSend("/topic/chat/GROUP/" + roomId, record.getValue());
+            }
+        );
+    }
+
 }
