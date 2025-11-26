@@ -1,72 +1,57 @@
 import ParticipantList from "./ParticipantList";
 import RoomEditor from "./RoomEditor";
-import ChatWindow from "../chat/ChatWindow";  
+import ChatWindow from "../chat/ChatWindow";
 
 export default function RoomDetail({
   selectedRoomInfo,
   participants,
-
-  // 상태
   isOwner,
   isJoined,
   isFull,
   isEditing,
 
-  // 수정 상태
   editTitle,
   editDesc,
   editMax,
-
-  // 이벤트 핸들러들
   onToggleEdit,
   onUpdateRoom,
   onDeleteRoom,
   onJoin,
   onLeave,
-  
-  // setState handlers
+
   setEditTitle,
   setEditDesc,
   setEditMax,
 
-  // 메시지 (서버 응답)
   message,
-
-  // 🎯 채팅 props
-  chatMessages,
-  chatInput,
-  setChatInput,
-  handleSendMessage,
-  userId,
 }) {
   return (
-    <div
-      style={{
-        marginTop: 30,
-        padding: 15,
-        border: "2px solid black",
-        borderRadius: 10
-      }}
-    >
-      <h3>방 상세 정보</h3>
-      <p>방 제목: {selectedRoomInfo.roomTitle}</p>
-      <p>설명: {selectedRoomInfo.roomDescription}</p>
-      <p>
-        인원: {participants.length} / {selectedRoomInfo.maxUserCnt}
+    <div className="mt-6 p-5 border rounded-2xl shadow bg-white">
+      <h3 className="text-xl font-bold">방 상세 정보</h3>
+
+      <p className="text-gray-700 mt-2">
+        <span className="font-semibold">방 제목:</span>{" "}
+        {selectedRoomInfo.roomTitle}
       </p>
 
+      <p className="text-gray-700 mt-1">
+        <span className="font-semibold">설명:</span>{" "}
+        {selectedRoomInfo.roomDescription}
+      </p>
+
+      <p className="text-gray-700 mt-1">
+        <span className="font-semibold">인원:</span> {participants.length} /{" "}
+        {selectedRoomInfo.maxUserCnt}
+      </p>
+
+      {/* 방 수정 / 취소 */}
       {isOwner && (
         <button
           onClick={onToggleEdit}
-          style={{
-            background: "#ff9800",
-            color: "white",
-            padding: "8px 15px",
-            borderRadius: 6,
-            border: "none",
-            cursor: "pointer",
-            marginTop: 10
-          }}
+          className="
+            mt-4 px-4 py-2 rounded-lg text-white
+            bg-yellow-500 hover:bg-yellow-600
+          "
         >
           {isEditing ? "수정 취소" : "방 수정하기"}
         </button>
@@ -90,33 +75,17 @@ export default function RoomDetail({
       {isOwner && (
         <button
           onClick={onDeleteRoom}
-          style={{
-            background: "black",
-            color: "white",
-            padding: "8px 15px",
-            borderRadius: 6,
-            border: "none",
-            cursor: "pointer",
-            marginTop: 15
-          }}
+          className="mt-4 px-4 py-2 rounded-lg text-white bg-black hover:bg-gray-800"
         >
           방 삭제
         </button>
       )}
 
-      {/* 참여/나가기 */}
+      {/* 참여 조건 */}
       {!isOwner && !isJoined && !isFull && (
         <button
           onClick={onJoin}
-          style={{
-            background: "#007bff",
-            color: "white",
-            padding: "8px 15px",
-            borderRadius: 6,
-            border: "none",
-            cursor: "pointer",
-            marginTop: 10
-          }}
+          className="mt-4 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
         >
           참여하기
         </button>
@@ -125,33 +94,23 @@ export default function RoomDetail({
       {!isOwner && isJoined && (
         <button
           onClick={onLeave}
-          style={{
-            background: "red",
-            color: "white",
-            padding: "8px 15px",
-            borderRadius: 6,
-            border: "none",
-            cursor: "pointer",
-            marginTop: 10
-          }}
+          className="mt-4 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
         >
           나가기
         </button>
       )}
 
-      {isJoined && <p>✔ 이미 참여한 사용자입니다.</p>}
-      {isFull && <p>❌ 방 인원이 가득 찼습니다.</p>}
-      {message && <p style={{ marginTop: 10 }}>서버 응답: {message}</p>}
-
-      <ParticipantList participants={participants} />
- 
-      <ChatWindow
-        chatMessages={chatMessages}
-        chatInput={chatInput}
-        setChatInput={setChatInput}
-        handleSendMessage={handleSendMessage}
-        userId={userId}
-      />
+      {isJoined && (
+        <p className="text-green-700 mt-2 text-sm">
+          ✔ 이미 참여한 사용자입니다.
+        </p>
+      )}
+      {isFull && (
+        <p className="text-red-700 mt-2 text-sm">❌ 방 인원이 가득 찼습니다.</p>
+      )}
+      {message && (
+        <p className="mt-2 text-blue-700 text-sm">서버 응답: {message}</p>
+      )}
     </div>
   );
 }

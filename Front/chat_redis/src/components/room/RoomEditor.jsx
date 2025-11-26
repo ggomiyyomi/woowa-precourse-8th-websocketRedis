@@ -1,5 +1,3 @@
-// src/components/room/RoomEditor.jsx
-
 export default function RoomEditor({
   editTitle,
   editDesc,
@@ -8,26 +6,18 @@ export default function RoomEditor({
   setEditDesc,
   setEditMax,
   onUpdateRoom,
-  participantsCount
+  participantsCount,
 }) {
   return (
-    <div
-      style={{
-        marginTop: 15,
-        padding: 12,
-        border: "1px solid #999",
-        borderRadius: 8,
-        background: "#f9f9f9"
-      }}
-    >
-      <h4>✏️ 방 정보 수정</h4>
+    <div className="mt-4 p-4 bg-gray-50 border rounded-xl shadow-sm">
+      <h4 className="font-semibold text-lg mb-3">✏️ 방 정보 수정</h4>
 
       <input
         type="text"
         value={editTitle}
         onChange={(e) => setEditTitle(e.target.value)}
         placeholder="방 제목"
-        style={{ width: "100%", padding: 8, marginBottom: 8 }}
+        className="w-full p-2 border rounded-lg mb-3"
       />
 
       <input
@@ -35,7 +25,7 @@ export default function RoomEditor({
         value={editDesc}
         onChange={(e) => setEditDesc(e.target.value)}
         placeholder="방 설명"
-        style={{ width: "100%", padding: 8, marginBottom: 8 }}
+        className="w-full p-2 border rounded-lg mb-3"
       />
 
       <input
@@ -44,25 +34,19 @@ export default function RoomEditor({
         value={editMax}
         onChange={(e) => setEditMax(Number(e.target.value))}
         placeholder="최대 인원"
-        style={{ width: 160, padding: 8, marginRight: 8 }}
+        className="w-40 p-2 border rounded-lg"
       />
 
       <button
         onClick={onUpdateRoom}
-        style={{
-          background: "#4caf50",
-          color: "white",
-          padding: "8px 15px",
-          borderRadius: 6,
-          border: "none",
-          cursor: "pointer"
-        }}
+        className="ml-3 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
       >
         저장
       </button>
 
-      <p style={{ fontSize: 12, marginTop: 8, color: "#555" }}>
-        ※ 현재 인원({participantsCount})보다 작은 정원으로 줄이면 서버에서 거절됩니다.
+      <p className="text-xs text-gray-500 mt-2">
+        ※ 현재 인원({participantsCount})보다 작은 정원으로 줄이면 서버에서
+        거절됩니다.
       </p>
     </div>
   );

@@ -1,23 +1,18 @@
 import MessageItem from "./MessageItem";
 
-export default function MessageList({ chatMessages, userId }) {
+export default function MessageList({ chatMessages, userId, ownerUserId }) {
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: 8,
-        padding: 10,
-        height: 300,
-        overflowY: "scroll",
-        background: "#fafafa",
-        marginBottom: 15,
-      }}
-    >
+    <div className="border rounded-lg p-3 h-80 overflow-y-scroll bg-gray-50 mb-4">
       {chatMessages.length === 0 ? (
-        <p style={{ color: "#666" }}>아직 메시지가 없습니다.</p>
+        <p className="text-gray-500">아직 메시지가 없습니다.</p>
       ) : (
         chatMessages.map((msg) => (
-          <MessageItem key={msg.cmId} msg={msg} userId={userId} />
+          <MessageItem
+            key={msg.cmId}
+            msg={msg}
+            userId={userId}
+            ownerUserId={ownerUserId} // 🔥 전달
+          />
         ))
       )}
     </div>

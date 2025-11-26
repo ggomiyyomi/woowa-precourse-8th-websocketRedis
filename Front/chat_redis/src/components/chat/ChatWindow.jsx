@@ -7,19 +7,24 @@ export default function ChatWindow({
   setChatInput,
   handleSendMessage,
   userId,
+  ownerUserId,
+  isJoined,
 }) {
   return (
-    <div style={{ marginTop: 30 }}>
-      <h3>💬 채팅</h3>
+    <div>
+      <h3 className="text-lg font-bold mb-2">💬 채팅</h3>
 
-      {/* 메시지 리스트 */}
-      <MessageList chatMessages={chatMessages} userId={userId} />
+      <MessageList
+        chatMessages={chatMessages}
+        userId={userId}
+        ownerUserId={ownerUserId}
+      />
 
-      {/* 입력창 */}
       <ChatInput
         chatInput={chatInput}
         setChatInput={setChatInput}
         handleSendMessage={handleSendMessage}
+        isJoined={isJoined} // 🔥 전달
       />
     </div>
   );
