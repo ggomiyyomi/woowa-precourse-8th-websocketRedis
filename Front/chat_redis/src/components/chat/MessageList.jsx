@@ -7,16 +7,12 @@ import { formatToDate } from "../../utils/formatDateOnly";
 export default function MessageList({ chatMessages, userId, ownerUserId }) {
   const listRef = useRef(null);
 
-  // 유저가 스크롤 올렸는지 체크
   const isUserScrollingRef = useRef(false);
 
-  // 이전 메시지 길이 저장 → 새 메시지 감지
   const prevLengthRef = useRef(chatMessages.length);
 
-  // 미리보기 UI 상태
   const [previewMessage, setPreviewMessage] = useState(null);
 
-  // 스크롤 이벤트: 사용자가 맨 아래에 있는지 판단
   const handleScroll = () => {
     const el = listRef.current;
     if (!el) return;
@@ -26,14 +22,12 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
     if (isBottom) {
       isUserScrollingRef.current = false;
 
-      // 미리보기 제거는 React 경고 방지를 위해 frame 뒤에 수행
       requestAnimationFrame(() => setPreviewMessage(null));
     } else {
       isUserScrollingRef.current = true;
     }
   };
 
-  // 새 메시지 왔을 때 처리
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
@@ -41,7 +35,6 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
     const prevLen = prevLengthRef.current;
     const currLen = chatMessages.length;
 
-    // 첫 렌더링 시
     if (currLen === 0) {
       prevLengthRef.current = 0;
       requestAnimationFrame(() => setPreviewMessage(null));
@@ -50,11 +43,9 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
 
     const isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
 
-    // 새 메시지 들어옴
     if (currLen > prevLen) {
       const lastMsg = chatMessages[currLen - 1];
 
-      // 내가 맨 아래에 있으면 자동 스크롤 + 미리보기 없음
       if (!isUserScrollingRef.current || isBottom) {
         requestAnimationFrame(() => {
           el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
@@ -62,7 +53,6 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
 
         requestAnimationFrame(() => setPreviewMessage(null));
       } else {
-        // 위로 스크롤 중이면 미리보기 보여주기
         const sender =
           lastMsg.userId === ownerUserId ? "방장" : `사용자 ${lastMsg.userId}`;
 
@@ -75,7 +65,6 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
     prevLengthRef.current = currLen;
   }, [chatMessages, ownerUserId]);
 
-  // 버튼 클릭 → 강제로 스크롤 맨 아래로
   const scrollToBottom = () => {
     const el = listRef.current;
     if (!el) return;
@@ -106,11 +95,10 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
             const showDivider = currDate !== prevDate;
 
             return (
-              <div key={msg.cmId}>
+              <div key={msg.id}>
                 {showDivider && <DateDivider date={currDate} />}
 
                 <MessageItem
-                  key={msg.cmId}
                   msg={msg}
                   userId={userId}
                   ownerUserId={ownerUserId}

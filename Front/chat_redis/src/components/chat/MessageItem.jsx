@@ -12,7 +12,7 @@ export default function MessageItem({ msg, userId, ownerUserId }) {
         }`}
       >
         <p className="text-sm font-bold mb-1">
-          {isOwnerUser ? "방장" : `사용자 ${msg.userId}`}
+          {isOwnerUser ? "방장 👑" : `사용자 ${msg.userId}`}
         </p>
 
         <p className="whitespace-pre-wrap break-words mb-1">{msg.content}</p>

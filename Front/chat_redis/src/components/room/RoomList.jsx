@@ -153,10 +153,21 @@ function RoomList() {
   // 채팅 메시지 로딩
   const fetchMessages = (roomId) => {
     fetch(
-      `http://localhost:8090/chat/message/list?roomType=GROUP&roomId=${roomId}&afterId=0&limit=200`
+      `http://localhost:8090/chat/message/list?roomType=GROUP&roomId=${roomId}&start=0-0&end=+`
     )
       .then((res) => res.json())
-      .then((data) => setChatMessages(data));
+      .then((records) => {
+        const parsed = records.map((r) => ({
+          id: r.id.value,
+          userId: Number(r.value.userId),
+          content: r.value.content,
+          roomType: r.value.roomType,
+          roomId: Number(r.value.roomId),
+          createdAt: Number(r.value.createdAt),
+        }));
+
+        setChatMessages(parsed);
+      });
   };
 
   // 메시지 전송
@@ -226,7 +237,18 @@ function RoomList() {
       `/topic/chat/GROUP/${selectedRoom}`,
       (msg) => {
         const data = JSON.parse(msg.body);
-        setChatMessages((prev) => [...prev, data]);
+
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            id: data.streamId ?? Date.now(), // ⭐ 안정적인 key 보장
+            userId: Number(data.userId),
+            content: data.content,
+            roomType: data.roomType,
+            roomId: Number(data.roomId),
+            createdAt: Number(data.createdAt),
+          },
+        ]);
       }
     );
 
@@ -304,7 +326,10 @@ function RoomList() {
       {/* 오른쪽 - 참여자 목록 */}
       <div className="pb-3 pt-3 col-span-1 h-full overflow-y-auto">
         {selectedRoom && selectedRoomInfo && (
-          <ParticipantList participants={participants} />
+          <ParticipantList
+            participants={participants}
+            ownerUserId={selectedRoomInfo.ownerUserId}
+          />
         )}
       </div>
 
