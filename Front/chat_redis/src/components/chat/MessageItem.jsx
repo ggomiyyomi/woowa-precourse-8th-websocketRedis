@@ -1,24 +1,22 @@
-export default function MessageItem({ msg, userId, ownerUserId }) {
+export default function MessageItem({ msg, userId, isOwner }) {
   const isMine = msg.userId === userId;
-  const isOwner = msg.userId === ownerUserId; // 🔥 방장 여부
+  const isOwnerUser = msg.userId === isOwner;
 
   return (
-    <div className={`flex mb-2 ${isMine ? "justify-end" : "justify-start"}`}>
+    <div className={`flex mb-3 ${isMine ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[70%] p-3 rounded-xl ${
+        className={`max-w-[70%] p-3 rounded-2xl ${
           isMine ? "bg-blue-200" : "bg-gray-200"
         }`}
       >
-        {/* 🔥 사용자 이름 + (방장) 표시 */}
-        <p className="text-sm font-semibold mb-1">
-          {isOwner ? "방장" : `사용자 ${msg.userId}`}
+        <p className="text-sm font-bold mb-1">
+          {isOwnerUser ? "방장" : `사용자 ${msg.userId}`}
         </p>
 
-        <p>{msg.content}</p>
+        {/* 🔥🔥 여기 수정됨! 줄바꿈 / 긴 단어 처리 */}
+        <p className="whitespace-pre-wrap break-words mb-1">{msg.content}</p>
 
-        <p className="text-[10px] text-gray-600 text-right mt-1">
-          {msg.createdAt}
-        </p>
+        <p className="text-xs text-gray-600 text-right">{msg.createdAt}</p>
       </div>
     </div>
   );
