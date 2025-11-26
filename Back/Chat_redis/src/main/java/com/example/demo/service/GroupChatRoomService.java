@@ -3,7 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-
+import com.example.demo.domain.ChatParticipant;
 import com.example.demo.domain.GroupChatRoom;
 import com.example.demo.mapper.ChatParticipantMapper;
 import com.example.demo.mapper.GroupChatRoomMapper;
@@ -22,9 +22,18 @@ public class GroupChatRoomService {
         room.setRoomTitle(title);
         room.setRoomDescription(description);
         room.setMaxUserCnt(maxUserCnt);
-        // 🔥 방장 자동 설정
-        room.setOwnerUserId(userId);
-        mapper.createGroupRoom(room);
+        room.setOwnerUserId(userId);  
+        
+        mapper.createGroupRoom(room);   
+        
+        ChatParticipant participant = new ChatParticipant();
+        participant.setRoomType("GROUP");
+        participant.setRoomId(room.getGcrId());   // ✅ 여기!
+        participant.setUserId(userId);
+        participant.setLastReadMessageId(0L);
+
+        participantMapper.insertParticipant(participant);
+        
         return room.getGcrId();
     }
 
