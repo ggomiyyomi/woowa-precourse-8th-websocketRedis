@@ -11,21 +11,28 @@ export default function ChatWindow({
   isJoined,
 }) {
   return (
-    <div>
+    <div className="flex flex-col h-full min-h-0">
+      {/* 제목 */}
       <h3 className="text-lg font-bold mb-2">💬 채팅</h3>
 
-      <MessageList
-        chatMessages={chatMessages}
-        userId={userId}
-        ownerUserId={ownerUserId}
-      />
+      {/* 메시지 리스트 → flex-1 + overflow-hidden */}
+      <div className="flex-1 min-h-0">
+        <MessageList
+          chatMessages={chatMessages}
+          userId={userId}
+          ownerUserId={ownerUserId}
+        />
+      </div>
 
-      <ChatInput
-        chatInput={chatInput}
-        setChatInput={setChatInput}
-        handleSendMessage={handleSendMessage}
-        isJoined={isJoined} // 🔥 전달
-      />
+      {/* 입력창 */}
+      <div className="mt-2">
+        <ChatInput
+          chatInput={chatInput}
+          setChatInput={setChatInput}
+          handleSendMessage={handleSendMessage}
+          isJoined={isJoined}
+        />
+      </div>
     </div>
   );
 }

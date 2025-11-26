@@ -191,8 +191,8 @@ function RoomList() {
       method: "POST",
     })
       .then((res) => res.json())
-      .then((newRoomId) => {
-        alert(`방 생성 성공! ID = ${newRoomId}`);
+      .then(() => {
+        alert(`방 생성 성공!`);
         setNewTitle("");
         setNewDesc("");
         setNewMax(10);
@@ -234,9 +234,9 @@ function RoomList() {
   }, [stompClient, selectedRoom]);
 
   return (
-    <div className="p-6 grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-4 h-screen overflow-hidden">
       {/* 왼쪽 - 방 목록 */}
-      <div className="col-span-1">
+      <div className="pb-3 pt-3 col-span-1 h-full overflow-y-auto scrollbar-hide">
         <h2 className="text-2xl font-bold mb-3">그룹 채팅방 목록</h2>
 
         {/* 사용자 선택 */}
@@ -247,7 +247,7 @@ function RoomList() {
             onChange={(e) => setUserId(Number(e.target.value))}
             className="border px-3 py-1 rounded-lg"
           >
-            {[1, 2, 3, 4, 5].map((id) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((id) => (
               <option key={id} value={id}>
                 User {id}
               </option>
@@ -270,7 +270,7 @@ function RoomList() {
       </div>
 
       {/* 가운데 - 채팅 + 설정버튼 */}
-      <div className="col-span-1">
+      <div className="pb-3 pt-3 col-span-1 flex flex-col h-full min-h-0 overflow-hidden">
         {selectedRoom && selectedRoomInfo && (
           <>
             {/* 상단: 방 제목 + ⚙️ 설정 버튼 */}
@@ -302,7 +302,7 @@ function RoomList() {
       </div>
 
       {/* 오른쪽 - 참여자 목록 */}
-      <div className="col-span-1">
+      <div className="pb-3 pt-3 col-span-1 h-full overflow-y-auto">
         {selectedRoom && selectedRoomInfo && (
           <ParticipantList participants={participants} />
         )}

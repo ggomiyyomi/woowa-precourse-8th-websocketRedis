@@ -4,7 +4,7 @@ export default function RoomItem({ room, onClick }) {
       onClick={() => onClick(room.gcrId)}
       className="
         border p-4 mt-3 rounded-xl cursor-pointer bg-white shadow-sm
-        hover:bg-gray-50 hover:shadow transition
+        hover:bg-gray-50 hover:shadow transition 
       "
     >
       <h3 className="text-lg font-semibold">{room.roomTitle}</h3>
