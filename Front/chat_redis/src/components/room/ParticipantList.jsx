@@ -1,40 +1,53 @@
-import { formatDateTime } from "../../utils/formatDateTime";
+// import { formatDateTime } from "../../utils/formatDateTime";
 
-export default function ParticipantList({ participants, ownerUserId }) {
+export default function ParticipantList({
+  participants,
+  ownerUserId,
+  isJoined,
+}) {
   return (
     <div className="p-4 border rounded-xl bg-white shadow">
       <h3 className="text-xl font-semibold mb-3">참여자 목록</h3>
 
-      {participants.length === 0 ? (
-        <p className="text-gray-500">아직 참여자가 없습니다.</p>
-      ) : (
-        <div className="space-y-3">
-          {participants.map((p) => (
-            <div
-              key={p.participantId}
-              className={`p-3 border rounded-lg ${
-                p.userId === ownerUserId
-                  ? "bg-yellow-50 border-yellow-300 shadow-sm"
-                  : "bg-gray-50"
-              }`}
-            >
-              <p className="flex items-center gap-2 font-bold text-sm">
-                {p.userId === ownerUserId ? (
-                  <>
-                    <span className="text-2xl leading-none">👑</span>
-                    <span className="text-yellow-700">방장</span>
-                  </>
-                ) : (
-                  <>사용자 ID: {p.userId}</>
-                )}
-              </p>
+      {!isJoined && (
+        <p className="text-gray-500 text-center py-6">
+          ⚠️ 이 방의 참여자 목록은 참여 후 확인할 수 있습니다.
+        </p>
+      )}
+      {isJoined && (
+        <>
+          {participants.length === 0 ? (
+            <p className="text-gray-500">아직 참여자가 없습니다.</p>
+          ) : (
+            <div className="space-y-3">
+              {participants.map((p) => (
+                <div
+                  key={p.participantId}
+                  className={`p-3 border rounded-lg ${
+                    p.userId === ownerUserId
+                      ? "bg-yellow-50 border-yellow-300 shadow-sm"
+                      : "bg-gray-50"
+                  }`}
+                >
+                  <p className="flex items-center gap-2 font-bold text-sm">
+                    {p.userId === ownerUserId ? (
+                      <>
+                        <span className="text-2xl leading-none">👑</span>
+                        <span className="text-yellow-700">방장</span>
+                      </>
+                    ) : (
+                      <>사용자 ID: {p.userId}</>
+                    )}
+                  </p>
 
-              <p className="text-xs text-gray-600">
-                참여 시각: {formatDateTime(p.joinedAt)}
-              </p>
+                  {/* <p className="text-xs text-gray-600">
+                    참여 시각: {formatDateTime(p.joinedAt)}
+                  </p> */}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -40,7 +40,7 @@ function RoomList() {
 
   // 방 리스트
   const fetchRooms = () => {
-    fetch("http://localhost:8090/chat/group/list")
+    fetch("http://192.168.2.42:8090/chat/group/list")
       .then((res) => res.json())
       .then((data) => setRooms(data));
   };
@@ -51,7 +51,7 @@ function RoomList() {
 
   // 방 상세 정보
   const fetchRoomInfo = (roomId) => {
-    fetch(`http://localhost:8090/chat/group/${roomId}`)
+    fetch(`http://192.168.2.42:8090/chat/group/${roomId}`)
       .then((res) => res.json())
       .then((data) => {
         setSelectedRoomInfo(data);
@@ -63,7 +63,7 @@ function RoomList() {
 
   // 참여자 불러오기
   const fetchParticipants = (roomId) => {
-    fetch(`http://localhost:8090/chat/group/${roomId}/participants`)
+    fetch(`http://192.168.2.42:8090/chat/group/${roomId}/participants`)
       .then((res) => res.json())
       .then((data) => setParticipants(data));
   };
@@ -81,7 +81,7 @@ function RoomList() {
   // 참여하기
   const handleJoin = () => {
     fetch(
-      `http://localhost:8090/chat/group/join?gcrId=${selectedRoom}&userId=${userId}`,
+      `http://192.168.2.42:8090/chat/group/join?gcrId=${selectedRoom}&userId=${userId}`,
       { method: "POST" }
     )
       .then((res) => res.text())
@@ -94,7 +94,7 @@ function RoomList() {
   // 나가기
   const handleLeave = () => {
     fetch(
-      `http://localhost:8090/chat/group/leave?gcrId=${selectedRoom}&userId=${userId}`,
+      `http://192.168.2.42:8090/chat/group/leave?gcrId=${selectedRoom}&userId=${userId}`,
       { method: "POST" }
     )
       .then((res) => res.text())
@@ -114,7 +114,7 @@ function RoomList() {
       maxUserCnt: editMax,
     };
 
-    fetch("http://localhost:8090/chat/group/update", {
+    fetch("http://192.168.2.42:8090/chat/group/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -135,7 +135,7 @@ function RoomList() {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     fetch(
-      `http://localhost:8090/chat/group/delete?gcrId=${selectedRoom}&userId=${userId}`,
+      `http://192.168.2.42:8090/chat/group/delete?gcrId=${selectedRoom}&userId=${userId}`,
       { method: "POST" }
     )
       .then((res) => res.text())
@@ -153,7 +153,7 @@ function RoomList() {
   // 채팅 메시지 로딩
   const fetchMessages = (roomId) => {
     fetch(
-      `http://localhost:8090/chat/message/list?roomType=GROUP&roomId=${roomId}&start=0-0&end=+`
+      `http://192.168.2.42:8090/chat/message/list?roomType=GROUP&roomId=${roomId}&start=0-0&end=+`
     )
       .then((res) => res.json())
       .then((records) => {
@@ -198,7 +198,7 @@ function RoomList() {
     params.append("maxUserCnt", newMax);
     params.append("userId", userId);
 
-    fetch(`http://localhost:8090/chat/group/create?${params.toString()}`, {
+    fetch(`http://192.168.2.42:8090/chat/group/create?${params.toString()}`, {
       method: "POST",
     })
       .then((res) => res.json())
@@ -216,7 +216,7 @@ function RoomList() {
   // STOMP 연결
   useEffect(() => {
     const client = new Client({
-      brokerURL: "ws://localhost:8090/ws-chat",
+      brokerURL: "ws://192.168.2.42:8090/ws-chat",
       reconnectDelay: 5000,
       debug: () => {},
     });
@@ -351,6 +351,7 @@ function RoomList() {
           <ParticipantList
             participants={participants}
             ownerUserId={selectedRoomInfo.ownerUserId}
+            isJoined={participants.some((p) => p.userId === userId)}
           />
         )}
       </div>
