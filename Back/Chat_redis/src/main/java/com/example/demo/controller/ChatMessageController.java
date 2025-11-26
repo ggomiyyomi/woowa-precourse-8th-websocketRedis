@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.data.redis.connection.stream.MapRecord;
+import org.springframework.data.domain.Range;   
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.domain.ChatMessage;
 import com.example.demo.dto.ChatMessageRequest;
 import com.example.demo.service.ChatMessageService;
 
@@ -16,21 +18,26 @@ import lombok.RequiredArgsConstructor;
 public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
+    private final StringRedisTemplate redisTemplate;
 
-    // 메시지 보내기
     @PostMapping("/send")
     public Long sendMessage(@RequestBody ChatMessageRequest req) {
         return chatMessageService.sendMessage(req);
     }
 
-    // 메시지 히스토리 조회
     @GetMapping("/list")
-    public List<ChatMessage> getMessages(
+    public List<MapRecord<String, Object, Object>> getMessages(
             @RequestParam("roomType") String roomType,
             @RequestParam("roomId") Long roomId,
-            @RequestParam(value="afterId", required=false) Long afterId,
-            @RequestParam(value="limit", defaultValue="50") int limit
+            @RequestParam(value="start", defaultValue="0-0") String start,
+            @RequestParam(value="end", defaultValue="+") String end
     ) {
-        return chatMessageService.getMessages(roomType, roomId, afterId, limit);
+        String key = "chat:" + roomType + ":" + roomId;
+
+        return redisTemplate.opsForStream()
+                .range(
+                        key,
+                        Range.closed(start, end)
+                );
     }
 }

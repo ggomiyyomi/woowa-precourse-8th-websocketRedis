@@ -28,7 +28,7 @@ public class GroupChatRoomService {
         
         ChatParticipant participant = new ChatParticipant();
         participant.setRoomType("GROUP");
-        participant.setRoomId(room.getGcrId());   // ✅ 여기!
+        participant.setRoomId(room.getGcrId());  
         participant.setUserId(userId);
         participant.setLastReadMessageId(0L);
 

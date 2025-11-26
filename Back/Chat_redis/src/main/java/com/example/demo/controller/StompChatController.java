@@ -1,30 +1,32 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.ChatMessage;
 import com.example.demo.dto.ChatMessageRequest;
-import com.example.demo.service.ChatMessageService;
+import com.example.demo.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class StompChatController {
 
-    private final ChatMessageService chatMessageService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final RedisPublisher redisPublisher;
 
-    // 클라이언트에서 /app/chat.send 로 메시지 발행
     @MessageMapping("/chat.send")
     public void send(ChatMessageRequest req) {
 
-        // 1) DB 저장
-        Long savedId = chatMessageService.sendMessage(req);
-        ChatMessage saved = chatMessageService.getById(savedId);
+        String streamKey = "chat:" + req.getRoomType() + ":" + req.getRoomId();
 
-        // 2) 구독자들에게 브로드캐스트
-        String destination = "/topic/chat/" + req.getRoomType() + "/" + req.getRoomId();
-        messagingTemplate.convertAndSend(destination, saved);
+        Map<String, String> msg = new HashMap<>();
+        msg.put("roomType", req.getRoomType());
+        msg.put("roomId", req.getRoomId().toString());
+        msg.put("userId", req.getUserId().toString());
+        msg.put("content", req.getContent());
+        msg.put("createdAt", String.valueOf(System.currentTimeMillis()));
+
+        redisPublisher.publish(streamKey, msg);
     }
 }
