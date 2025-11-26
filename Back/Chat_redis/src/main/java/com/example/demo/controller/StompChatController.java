@@ -1,13 +1,15 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ChatMessageRequest;
-import com.example.demo.service.RedisPublisher;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.example.demo.dto.ChatMessageRequest;
+import com.example.demo.service.RedisPublisher;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,4 +31,5 @@ public class StompChatController {
 
         redisPublisher.publish(streamKey, msg);
     }
+     
 }
