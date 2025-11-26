@@ -1,6 +1,5 @@
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
-
 export default function ChatWindow({
   chatMessages,
   chatInput,
@@ -12,10 +11,7 @@ export default function ChatWindow({
 }) {
   return (
     <div className="flex flex-col h-full min-h-0">
-      {/* 제목 */}
       <h3 className="text-lg font-bold mb-2">💬 채팅</h3>
-
-      {/* 메시지 리스트 → flex-1 + overflow-hidden */}
       <div className="flex-1 min-h-0">
         <MessageList
           chatMessages={chatMessages}
@@ -23,7 +19,6 @@ export default function ChatWindow({
           ownerUserId={ownerUserId}
         />
       </div>
-
       {/* 입력창 */}
       <div className="mt-2">
         <ChatInput

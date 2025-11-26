@@ -1,5 +1,3 @@
-// src/components/chat/MessageList.jsx
-
 import { useEffect, useRef, useState } from "react";
 import MessageItem from "./MessageItem";
 import DateDivider from "../DateDivider";
@@ -109,7 +107,6 @@ export default function MessageList({ chatMessages, userId, ownerUserId }) {
         )}
       </div>
 
-      {/* 🔥 새 메시지 미리보기 (카톡 스타일) */}
       {previewMessage && (
         <button
           onClick={scrollToBottom}

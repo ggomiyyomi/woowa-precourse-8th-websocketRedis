@@ -237,22 +237,44 @@ function RoomList() {
       `/topic/chat/GROUP/${selectedRoom}`,
       (msg) => {
         const data = JSON.parse(msg.body);
+        // 🔥 1) READ 이벤트일 때
+        if (data.type === "READ") {
+          setChatMessages((prev) =>
+            prev.map((m) =>
+              m.id === data.messageId
+                ? { ...m, readBy: [...(m.readBy || []), data.userId] }
+                : m
+            )
+          );
+          return; // 메시지 추가하지 않음
+        }
+        const messageObj = {
+          id: data.streamId ?? Date.now(),
+          userId: Number(data.userId),
+          content: data.content,
+          roomType: data.roomType,
+          roomId: Number(data.roomId),
+          createdAt: Number(data.createdAt),
+          readBy: [],
+        };
 
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            id: data.streamId ?? Date.now(), // ⭐ 안정적인 key 보장
-            userId: Number(data.userId),
-            content: data.content,
+        setChatMessages((prev) => [...prev, messageObj]);
+
+        stompClient.publish({
+          destination: "/app/chat.read",
+          body: JSON.stringify({
             roomType: data.roomType,
-            roomId: Number(data.roomId),
-            createdAt: Number(data.createdAt),
-          },
-        ]);
+            roomId: data.roomId,
+            messageId: messageObj.id,
+            userId, // 🚀 현재 로그인한 사용자
+          }),
+        });
       }
     );
 
     return () => sub.unsubscribe();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stompClient, selectedRoom]);
 
   return (
